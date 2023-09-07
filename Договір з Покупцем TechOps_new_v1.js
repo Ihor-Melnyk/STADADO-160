@@ -18,7 +18,7 @@ function onChangecontractorId(onButtonPush = false) {
       conInfo = edocsGETCONTRACTOR.data;
     }
     setUpdateWith1C(conInfo);
-    if (onButtonPush) setUpdateWith1CSystemAttr(data);
+    if (onButtonPush) setUpdateWith1CSystemAttr(conInfo);
   }
 }
 
@@ -1783,7 +1783,7 @@ function onButtonPushCounterpartyButton() {
 
 function setUpdateWith1CSystemAttr(data) {
   debugger;
-  if (data && data.length) {
+  if (data) {
     //EdocsApi.setAttributeValue({ code: "Counterparty", value: `${data.ShortName} (${data.code})`, text: null });
     EdocsApi.setAttributeValue({ code: "CounterpartyAccount", value: data.accounts?.CounterpartyAccount || null, text: null });
     EdocsApi.setAttributeValue({ code: "CounterpartyCurrency", value: data.accounts?.CounterpartyCurrency || null, text: null });
