@@ -1,7 +1,7 @@
 ///// Договір з Покупцем ComOps
 //заполнение данными из 1С дополнительных атрибутов контрагента, которые не вхоят в состав стандартных атрибутов еДокс. Происходит по событию изменения в контроле "контрагент"
 //region updatea data from 1C
-function onChangecontractorId() {
+function onChangecontractorId(onButtonPush = false) {
   debugger;
   clearCounterparty();
   var conInfo;
@@ -17,7 +17,11 @@ function onChangecontractorId() {
       }
       conInfo = edocsGETCONTRACTOR.data;
     }
-    setUpdateWith1C(conInfo);
+    if (onButtonPush) {
+      setUpdateWith1C(conInfo, onButtonPush);
+    } else {
+      setUpdateWith1C(conInfo);
+    }
   }
 }
 
@@ -28,7 +32,7 @@ function isCheckValue(value) {
   return false;
 }
 
-function setUpdateWith1C(data) {
+function setUpdateWith1C(data, onButtonPush) {
   debugger;
   var val = data.attributes;
   if (val && val.length) {
@@ -51,18 +55,14 @@ function setUpdateWith1C(data) {
     EdocsApi.setAttributeValue({ code: "CounterpartAmount", value: val.find(x => x.code == "CounterpartAmount")?.value || null, text: null });
     EdocsApi.setAttributeValue({ code: "CounterpartyYearAmount", value: val.find(x => x.code == "CounterpartyYearAmount")?.value, text: null });
   }
-  if (data.accounts && data.accounts.length) {
-    //debugger;
-    setAccounsMap(data.accounts);
+  if (!onButtonPush) {
+    if (data.accounts && data.accounts.length) {
+      setAccounsMap(data.accounts);
+    }
+    if (data.authorisedPersons && data.authorisedPersons.length) {
+      setAuthPersonsMap(data.authorisedPersons);
+    }
   }
-  if (data.authorisedPersons && data.authorisedPersons.length) {
-    //debugger;
-    setAuthPersonsMap(data.authorisedPersons);
-  }
-  // } catch (e) {
-  //    console.log(e)
-  //   throw 'невірні дані'
-  // }
 }
 
 function clearCounterparty() {
@@ -1778,5 +1778,5 @@ function setControlRequired(CODE, state) {
  }*/
 
 function onButtonPushCounterpartyButton() {
-  onChangecontractorId();
+  onChangecontractorId(true);
 }
